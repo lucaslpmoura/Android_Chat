@@ -34,7 +34,7 @@ class LoginScreenViewModel : ViewModel() {
                 }
             }
         } else{
-            return Text("Por favor desligue o modo avião.")
+            return Text("Please turn off AirPlaneMode.")
         }
 
 

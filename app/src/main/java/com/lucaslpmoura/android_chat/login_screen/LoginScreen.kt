@@ -30,11 +30,10 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerReceiver(
-
             airPlaneModeReceiver,
             IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-
-            )
+        )
+        updateUIOnAirPlaneModeChange(airPlaneModeReceiver.checkAirPlaneMode(this))
         setContent {
             LoginScreenModel()
         }
