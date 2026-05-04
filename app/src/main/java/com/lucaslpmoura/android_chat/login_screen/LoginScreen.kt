@@ -1,5 +1,6 @@
 package com.lucaslpmoura.android_chat.login_screen
 
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,11 +13,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.lucaslpmoura.android_chat.common.AirPlaneModeListener
 import com.lucaslpmoura.android_chat.common.AirPlaneModeReceiver
 import com.lucaslpmoura.android_chat.ui.theme.Android_ChatTheme
@@ -54,6 +60,14 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text("Android Chat")
+                    Row() {
+                        Text("Server Address: ${viewModel.serverAddress}")
+                        Button(
+                            onClick = {viewModel.serverDialogValue = true}
+                        ){
+                            Text("Change...")
+                        }
+                    }
                     viewModel.LoginComposable()
                     Row(
                     ) {
@@ -69,7 +83,10 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                         }
                     }
                 }
+
+            ServerAddressDialog()
             }
+
 
     }
 
@@ -104,6 +121,31 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
 
     override fun updateUIOnAirPlaneModeChange(isAirPlaneModeOn : Boolean) {
         viewModel.isAirPlaneModeOn = isAirPlaneModeOn
+    }
+
+    @Composable
+    private fun ServerAddressDialog(){
+        if(viewModel.serverDialogValue){
+            Dialog(
+                onDismissRequest = {viewModel.serverDialogValue = false},
+                properties = DialogProperties(
+                    dismissOnBackPress = true
+                )
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    TextField(
+                        state = rememberTextFieldState(),
+                        label = {Text("Address")},
+
+                    )
+                }
+            }
+        }
+
     }
 
 }

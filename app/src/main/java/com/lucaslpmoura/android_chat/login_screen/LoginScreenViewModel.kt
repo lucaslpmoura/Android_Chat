@@ -1,6 +1,7 @@
 package com.lucaslpmoura.android_chat.login_screen
 
 
+import android.app.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 
+import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
+
+
 class LoginScreenViewModel : ViewModel() {
+
+    var client = KotlinChatClient()
+    var serverAddress by mutableStateOf(client.serverAddress)
+    var serverDialogValue by mutableStateOf(false)
 
     var isAirPlaneModeOn by mutableStateOf(false)
 
@@ -36,7 +44,7 @@ class LoginScreenViewModel : ViewModel() {
         } else{
             return Text("Please turn off AirPlaneMode.")
         }
-
-
     }
+
+
 }
