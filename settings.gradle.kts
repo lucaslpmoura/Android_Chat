@@ -21,7 +21,6 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             url = uri("https://jitpack.io")
-            credentials.username = providers.gradleProperty("authToken").get()
         }
     }
 }
