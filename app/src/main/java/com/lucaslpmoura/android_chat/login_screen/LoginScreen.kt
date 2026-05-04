@@ -14,13 +14,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.lucaslpmoura.android_chat.common.AirPlaneModeListener
@@ -31,6 +46,8 @@ import com.lucaslpmoura.android_chat.ui.theme.Android_ChatTheme
 class LoginScreen : ComponentActivity(), AirPlaneModeListener {
 
     private val viewModel by viewModels<LoginScreenViewModel>()
+
+
     private val airPlaneModeReceiver = AirPlaneModeReceiver(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,34 +69,40 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
 
     @Composable
     public fun LoginScreenModel() {
-        return Android_ChatTheme {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+
+        Scaffold(
+            snackbarHost = {SnackbarHost(snackbarHostState)}
+        ) { padding ->
                 Column(
                     modifier = Modifier
+                        .padding(padding)
                         .fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text("Android Chat")
                     Row() {
-                        Text("Server Address: ${viewModel.serverAddress}")
+                        Text("Endereço do Servidor: ${viewModel.serverAddress}")
                         Button(
                             onClick = {viewModel.serverDialogValue = true}
                         ){
-                            Text("Change...")
+                            Text("Alterar...")
                         }
                     }
-                    viewModel.LoginComposable()
+                    LoginComposable()
                     Row(
                     ) {
                         Button(
                             onClick = {shareOnWhatsapp()}
                         ) {
-                            Text("Share on Whatsapp")
+                            Text("Compartilhe no Whatsapp")
                         }
                         Button(
                             onClick = {sendBugFixEmail()}
                         ){
-                            Text("Send a bug report")
+                            Text("Enviar relatório de bug")
                         }
                     }
                 }
@@ -124,6 +147,27 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
     }
 
     @Composable
+    fun LoginComposable(){
+        if(!viewModel.isAirPlaneModeOn){
+            return Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    state = rememberTextFieldState(),
+                    label = {Text("Username")}
+                )
+                Button (
+                    onClick = {}
+                ) {
+                    Text("Join")
+                }
+            }
+        } else{
+            return Text("Please turn off AirPlaneMode.")
+        }
+    }
+
+    @Composable
     private fun ServerAddressDialog(){
         if(viewModel.serverDialogValue){
             Dialog(
@@ -132,20 +176,34 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                     dismissOnBackPress = true
                 )
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    TextField(
-                        state = rememberTextFieldState(),
-                        label = {Text("Address")},
-
-                    )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(175.dp)
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        TextField(
+                            state = viewModel.serverAddressTextFieldState,
+                            label = {Text("Endereço")},
+                        )
+                        Button(
+                            onClick = {
+                                viewModel.changeServerAddress(viewModel.serverAddressTextFieldState.text.toString())
+                                viewModel.serverDialogValue = false
+                            }
+                        ) {
+                            Text("Alterar")
+                        }
+                    }
                 }
+
             }
         }
-
     }
-
 }
