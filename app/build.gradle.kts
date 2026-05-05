@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
-    alias(libs.plugins.koin.compiler)
+
 }
 
 android {
@@ -66,8 +66,7 @@ dependencies {
     val koin_version = "4.2.1"
 
     implementation("io.insert-koin:koin-androidx-compose:${koin_version}")
-    implementation("io.insert-koin:koin-android:latest:${koin_version}")
+    implementation("io.insert-koin:koin-android:${koin_version}")
 
     implementation(libs.koin.core)
-    implementation(libs.koin.annotations)
 }

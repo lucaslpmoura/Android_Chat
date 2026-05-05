@@ -28,9 +28,8 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 
-class LoginScreenViewModel : ViewModel() {
+class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() {
 
-    var client = getChatClient()
     var serverAddress by mutableStateOf(client.serverAddress)
     var name by mutableStateOf("")
 
@@ -59,12 +58,18 @@ class LoginScreenViewModel : ViewModel() {
             try {
                 delay(2.seconds)
                 client.run()
+                client.connect(name)
             } catch (e: Exception) {
                 connectingToServer = false
                 errorSnackBarText = "Could not connect to server."
                 showErrorSnackbar = true
             }
         }
+    }
+
+
+    public fun updateUIOnAirPlaneModeChange(isAirPlaneModeOn : Boolean) {
+        this.isAirPlaneModeOn = isAirPlaneModeOn
     }
 
 }
