@@ -63,7 +63,7 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
                 client.connect(name)
             } catch (e: Exception) {
                 connectingToServer = false
-                errorSnackBarText = "Could not connect to server."
+                errorSnackBarText = "Erro ao conectar no servidor."
                 showErrorSnackbar = true
             }
         }

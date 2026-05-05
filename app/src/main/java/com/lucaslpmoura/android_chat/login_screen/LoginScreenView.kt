@@ -179,7 +179,7 @@ fun LoginComposable(viewModel: LoginScreenViewModel) {
         ) {
             TextField(
                 state = rememberTextFieldState(),
-                label = { Text("Username") }
+                label = { Text("Nome de usuário") }
             )
             Button(
                 onClick = { viewModel.connectToServer() }
