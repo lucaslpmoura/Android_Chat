@@ -2,6 +2,8 @@ package com.lucaslpmoura.android_chat.login_screen
 
 
 import android.app.AlertDialog
+import android.content.Context
+import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.compose.foundation.layout.Column
@@ -68,8 +70,15 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
     }
 
 
-    public fun updateUIOnAirPlaneModeChange(isAirPlaneModeOn : Boolean) {
-        this.isAirPlaneModeOn = isAirPlaneModeOn
+    public fun updateUIOnAirPlaneModeChange(context : Context) {
+        this.isAirPlaneModeOn = checkAirPlaneMode(context)
+    }
+
+    fun checkAirPlaneMode(context: Context?): Boolean {
+        return Settings.Global.getInt(
+            context?.contentResolver,
+            Settings.Global.AIRPLANE_MODE_ON
+        ) != 0
     }
 
 }

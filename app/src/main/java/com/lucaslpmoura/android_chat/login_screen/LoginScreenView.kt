@@ -58,31 +58,22 @@ public fun LoginScreen(viewModel: LoginScreenViewModel = koinViewModel()) {
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
-                    val isTurnedOn: Boolean = checkAirPlaneMode(context)
-
-                    viewModel.updateUIOnAirPlaneModeChange(isTurnedOn)
+                    viewModel.updateUIOnAirPlaneModeChange(context!!)
                 }
-            }
-
-            fun checkAirPlaneMode(context: Context?): Boolean {
-                return Settings.Global.getInt(
-                    context?.contentResolver,
-                    Settings.Global.AIRPLANE_MODE_ON
-                ) != 0
             }
         }
 
-        ContextCompat.registerReceiver(
-            context,
-            receiver,
-            IntentFilter(),
-            ContextCompat.RECEIVER_NOT_EXPORTED
+
+        context.registerReceiver(
+            receiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         )
 
         onDispose {
             context.unregisterReceiver(receiver)
         }
     }
+
+    viewModel.updateUIOnAirPlaneModeChange(context)
 
 
     Scaffold(
@@ -197,7 +188,7 @@ fun LoginComposable(viewModel: LoginScreenViewModel) {
             }
         }
     } else {
-        return Text("Please turn off AirPlaneMode.")
+        return Text("Por favor desabilite o modo avião.")
     }
 }
 
