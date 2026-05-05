@@ -19,6 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 
 import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 
 class LoginScreenViewModel : ViewModel() {
@@ -27,10 +33,14 @@ class LoginScreenViewModel : ViewModel() {
     var serverAddress by mutableStateOf(client.serverAddress)
     var name by mutableStateOf("")
 
-    var isSnackBarShowing by mutableStateOf(false)
+    var connectingToServer by mutableStateOf(false)
+    var showErrorSnackbar by mutableStateOf(false)
+    var errorSnackBarText by mutableStateOf("")
 
     var serverDialogValue by mutableStateOf(false)
     var isAirPlaneModeOn by mutableStateOf(false)
+
+    private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     val serverAddressTextFieldState = TextFieldState(
         initialText = serverAddress
@@ -43,7 +53,22 @@ class LoginScreenViewModel : ViewModel() {
 
     public fun connectToServer(){
         client.serverAddress = serverAddress
-        client.connect(name)
+        connectingToServer = true
+        clientScope.launch {
+            try {
+                delay(2.seconds)
+                client.run()
+            } catch (e: Exception) {
+                connectingToServer = false
+                errorSnackBarText = "Could not connect to server."
+                showErrorSnackbar = true
+            }
+        }
+
+
+
+
+
     }
 
 }

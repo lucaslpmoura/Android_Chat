@@ -1,6 +1,5 @@
 package com.lucaslpmoura.android_chat.login_screen
 
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,26 +21,28 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.lucaslpmoura.android_chat.common.AirPlaneModeListener
 import com.lucaslpmoura.android_chat.common.AirPlaneModeReceiver
-import com.lucaslpmoura.android_chat.ui.theme.Android_ChatTheme
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 class LoginScreen : ComponentActivity(), AirPlaneModeListener {
@@ -64,6 +66,7 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(airPlaneModeReceiver)
     }
 
 
@@ -73,7 +76,12 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
         val scope = rememberCoroutineScope()
 
         Scaffold(
-            snackbarHost = {SnackbarHost(snackbarHostState)}
+            snackbarHost = {SnackbarHost(snackbarHostState) {
+                data -> Snackbar(
+                    snackbarData = data,
+                    containerColor = Color.Red
+                )
+            } }
         ) { padding ->
                 Column(
                     modifier = Modifier
@@ -83,14 +91,23 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text("Android Chat")
-                    Row() {
-                        Text("Endereço do Servidor: ${viewModel.serverAddress}")
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceAround
+                    ){
+
+
+                        Text("Endereço do Servidor:")
+                        Text(viewModel.serverAddress)
                         Button(
                             onClick = {viewModel.serverDialogValue = true}
                         ){
                             Text("Alterar...")
                         }
                     }
+
+
                     LoginComposable()
                     Row(
                     ) {
@@ -108,6 +125,11 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                 }
 
             ServerAddressDialog()
+            when(viewModel.showErrorSnackbar) {
+                true -> showErrorSnackBar(snackbarHostState, scope)
+                false -> {}
+            }
+
             }
 
 
@@ -148,8 +170,11 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
 
     @Composable
     fun LoginComposable(){
+        if(viewModel.connectingToServer){
+            return CircularProgressIndicator()
+        }
         if(!viewModel.isAirPlaneModeOn){
-            return Column(
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
@@ -157,9 +182,9 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                     label = {Text("Username")}
                 )
                 Button (
-                    onClick = {}
+                    onClick = {viewModel.connectToServer()}
                 ) {
-                    Text("Join")
+                    Text("Conectar")
                 }
             }
         } else{
@@ -203,6 +228,21 @@ class LoginScreen : ComponentActivity(), AirPlaneModeListener {
                     }
                 }
 
+            }
+        }
+    }
+
+
+    private fun showErrorSnackBar(snackbarHostState: SnackbarHostState, scope : CoroutineScope){
+        scope.launch {
+            val result = snackbarHostState.showSnackbar(
+                message = viewModel.errorSnackBarText
+
+            )
+
+            when(result)  {
+                SnackbarResult.ActionPerformed , SnackbarResult.Dismissed
+                    -> viewModel.showErrorSnackbar = false
             }
         }
     }
