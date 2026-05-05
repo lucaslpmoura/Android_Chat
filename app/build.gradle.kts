@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.koin.compiler)
 }
 
 android {
@@ -56,4 +58,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("com.github.lucaslpmoura:Kotlin_Chat:latest")
+
+    val nav_version = "2.9.8"
+    implementation("androidx.navigation:navigation-compose:${nav_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    val koin_version = "4.2.1"
+
+    implementation("io.insert-koin:koin-androidx-compose:${koin_version}")
+    implementation("io.insert-koin:koin-android:latest:${koin_version}")
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
 }
