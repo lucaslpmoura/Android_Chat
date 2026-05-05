@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -35,7 +36,7 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
     var serverAddress by mutableStateOf(client.serverAddress)
     var name by mutableStateOf("")
 
-    var connectingToServer by mutableStateOf(false)
+    var connectionState by mutableStateOf(ConnectionState.NOT_CONNECTED)
     var showErrorSnackbar by mutableStateOf(false)
     var errorSnackBarText by mutableStateOf("")
 
@@ -44,6 +45,9 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
 
     private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+    val userNameTextState = TextFieldState(
+
+    )
     val serverAddressTextFieldState = TextFieldState(
         initialText = serverAddress
     )
@@ -54,16 +58,25 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
     }
 
     public fun connectToServer(){
+        name = userNameTextState.text.toString()
+
         client.serverAddress = serverAddress
-        connectingToServer = true
+        connectionState = ConnectionState.CONNECTING
         clientScope.launch {
             try {
                 delay(2.seconds)
                 client.run()
                 client.connect(name)
+                delay(200.milliseconds)
+                if(client.name != name){
+                    throw Exception("Server rejected connection.")
+                }
+
+                connectionState = ConnectionState.CONNECTED
+
             } catch (e: Exception) {
-                connectingToServer = false
-                errorSnackBarText = "Erro ao conectar no servidor."
+                connectionState = ConnectionState.NOT_CONNECTED
+                errorSnackBarText = e.message!!
                 showErrorSnackbar = true
             }
         }
@@ -81,4 +94,8 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
         ) != 0
     }
 
+}
+
+enum class ConnectionState {
+    NOT_CONNECTED, CONNECTING, CONNECTED
 }

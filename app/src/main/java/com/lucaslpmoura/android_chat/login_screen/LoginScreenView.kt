@@ -170,26 +170,37 @@ private fun sendBugFixEmail(context: Context) {
 
 @Composable
 fun LoginComposable(viewModel: LoginScreenViewModel) {
-    if (viewModel.connectingToServer) {
-        return CircularProgressIndicator()
-    }
-    if (!viewModel.isAirPlaneModeOn) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                state = rememberTextFieldState(),
-                label = { Text("Nome de usuário") }
-            )
-            Button(
-                onClick = { viewModel.connectToServer() }
-            ) {
-                Text("Conectar")
+    when(viewModel.connectionState){
+        ConnectionState.NOT_CONNECTED -> {
+            if (!viewModel.isAirPlaneModeOn) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        state = viewModel.userNameTextState,
+                        label = { Text("Nome de usuário") },
+
+                    )
+                    Button(
+                        onClick = { viewModel.connectToServer() }
+                    ) {
+                        Text("Conectar")
+                    }
+                }
+            } else {
+                return Text("Por favor desabilite o modo avião.")
             }
         }
-    } else {
-        return Text("Por favor desabilite o modo avião.")
+
+        ConnectionState.CONNECTING -> CircularProgressIndicator()
+
+        ConnectionState.CONNECTED -> {
+            Text("You are connected as ${viewModel.name}.")
+        }
     }
+
+
+
 }
 
 @Composable
