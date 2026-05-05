@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import com.lucaslpmoura.android_chat.common.getChatClient
 
 import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class LoginScreenViewModel : ViewModel() {
 
-    var client = KotlinChatClient()
+    var client = getChatClient()
     var serverAddress by mutableStateOf(client.serverAddress)
     var name by mutableStateOf("")
 
@@ -64,11 +65,6 @@ class LoginScreenViewModel : ViewModel() {
                 showErrorSnackbar = true
             }
         }
-
-
-
-
-
     }
 
 }
