@@ -68,6 +68,11 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
                 client.run()
                 client.connect(name)
                 delay(200.milliseconds)
+
+
+                if(client.lastError != null){
+                    throw Exception("Server returned error.")
+                }
                 if(client.name != name){
                     throw Exception("Server rejected connection.")
                 }
