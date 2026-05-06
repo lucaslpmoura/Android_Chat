@@ -1,27 +1,16 @@
 package com.lucaslpmoura.android_chat.login_screen
 
+import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
 
-import android.app.AlertDialog
 import android.content.Context
 import android.provider.Settings
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.Button
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import com.lucaslpmoura.android_chat.common.getChatClient
 
-import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,7 +20,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
-class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() {
+class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
 
     var serverAddress by mutableStateOf(client.serverAddress)
     var name by mutableStateOf("")
@@ -78,6 +67,7 @@ class LoginScreenViewModel(private val client : KotlinChatClient) : ViewModel() 
                 }
 
                 connectionState = ConnectionState.CONNECTED
+
 
             } catch (e: Exception) {
                 connectionState = ConnectionState.NOT_CONNECTED

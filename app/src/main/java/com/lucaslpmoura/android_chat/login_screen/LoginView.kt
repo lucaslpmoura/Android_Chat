@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
-import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,9 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.ContextCompat
-import com.lucaslpmoura.android_chat.common.AirPlaneModeListener
-import com.lucaslpmoura.android_chat.common.AirPlaneModeReceiver
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -204,7 +199,7 @@ fun LoginComposable(viewModel: LoginScreenViewModel) {
 }
 
 @Composable
-private fun ServerAddressDialog(viewModel: LoginScreenViewModel) {
+private fun ServerAddressDialog(viewModel: LoginViewModel) {
     if (viewModel.serverDialogValue) {
         Dialog(
             onDismissRequest = { viewModel.serverDialogValue = false },
@@ -247,7 +242,7 @@ private fun ServerAddressDialog(viewModel: LoginScreenViewModel) {
 private fun showErrorSnackBar(
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
-    viewModel: LoginScreenViewModel
+    viewModel: LoginViewModel
 ) {
     scope.launch {
         val result = snackbarHostState.showSnackbar(
