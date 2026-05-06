@@ -201,7 +201,7 @@ fun LoginComposable(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("You are connected as ${viewModel.name}.")
+                Text("Conectado como ${viewModel.name}.")
                 Button(
                     onClick = { navigateToRoomsList() }
                 ) {
