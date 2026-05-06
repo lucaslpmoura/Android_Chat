@@ -43,7 +43,10 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-public fun LoginScreen(viewModel: LoginScreenViewModel = koinViewModel()) {
+public fun LoginScreen(
+    viewModel: LoginViewModel = koinViewModel(),
+    navigateToRoomsList : () -> Unit
+) {
     val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -106,7 +109,7 @@ public fun LoginScreen(viewModel: LoginScreenViewModel = koinViewModel()) {
             }
 
 
-            LoginComposable(viewModel)
+            LoginComposable(viewModel, navigateToRoomsList)
             Row(
             ) {
                 Button(
@@ -164,9 +167,12 @@ private fun sendBugFixEmail(context: Context) {
 
 
 @Composable
-fun LoginComposable(viewModel: LoginScreenViewModel) {
+fun LoginComposable(
+    viewModel: LoginViewModel,
+    navigateToRoomsList: () -> Unit
+) {
     when(viewModel.connectionState){
-        ConnectionState.NOT_CONNECTED -> {
+        LoginViewModel.ConnectionState.NOT_CONNECTED -> {
             if (!viewModel.isAirPlaneModeOn) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -177,7 +183,9 @@ fun LoginComposable(viewModel: LoginScreenViewModel) {
 
                     )
                     Button(
-                        onClick = { viewModel.connectToServer() }
+                        onClick = {
+                            viewModel.connectToServer()
+                        }
                     ) {
                         Text("Conectar")
                     }
@@ -187,10 +195,20 @@ fun LoginComposable(viewModel: LoginScreenViewModel) {
             }
         }
 
-        ConnectionState.CONNECTING -> CircularProgressIndicator()
+        LoginViewModel.ConnectionState.CONNECTING -> CircularProgressIndicator()
 
-        ConnectionState.CONNECTED -> {
-            Text("You are connected as ${viewModel.name}.")
+        LoginViewModel.ConnectionState.CONNECTED -> {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("You are connected as ${viewModel.name}.")
+                Button(
+                    onClick = { navigateToRoomsList() }
+                ) {
+                    Text("Ver Salas")
+                }
+            }
+
         }
     }
 
