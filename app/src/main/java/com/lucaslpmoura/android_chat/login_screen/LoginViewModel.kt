@@ -51,8 +51,13 @@ class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
 
         client.serverAddress = serverAddress
         connectionState = ConnectionState.CONNECTING
+
         clientScope.launch {
             try {
+                if(name.isEmpty()){
+                    throw Exception("User name cannot be empty.")
+                }
+
                 delay(2.seconds)
                 client.run()
                 client.connect(name)

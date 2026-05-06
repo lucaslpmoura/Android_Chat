@@ -57,7 +57,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("com.github.lucaslpmoura:Kotlin_Chat:latest")
+    implementation("com.github.lucaslpmoura:Kotlin_Chat:0.1.4.2")
 
     val nav_version = "2.9.8"
     implementation("androidx.navigation:navigation-compose:${nav_version}")
@@ -69,4 +69,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:${koin_version}")
 
     implementation(libs.koin.core)
+
+    val version = "2.2.0"
+    implementation ("androidx.lifecycle:lifecycle-extensions:$version")
 }
