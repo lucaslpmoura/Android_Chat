@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.lucaslpmoura.android_chat.common.AndroidChatViewModel
 
 
 import kotlinx.coroutines.CoroutineScope
@@ -20,19 +21,13 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
-class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
+class LoginViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
 
     var serverAddress by mutableStateOf("10.0.2.2")
-    var name by mutableStateOf("")
-
     var connectionState by mutableStateOf(ConnectionState.NOT_CONNECTED)
-    var showErrorSnackbar by mutableStateOf(false)
-    var errorSnackBarText by mutableStateOf("")
 
     var serverDialogValue by mutableStateOf(false)
     var isAirPlaneModeOn by mutableStateOf(false)
-
-    private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     val userNameTextState = TextFieldState()
     val serverAddressTextFieldState = TextFieldState(

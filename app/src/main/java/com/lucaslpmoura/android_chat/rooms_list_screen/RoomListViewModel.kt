@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.lucaslpmoura.android_chat.common.AndroidChatViewModel
 import com.lucaslpmoura.kotlin_chat.client.KotlinChatClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,12 +13,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
-class RoomListViewModel(private val client : KotlinChatClient) : ViewModel() {
-
-    val name = client.name
+class RoomListViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
 
     var roomList by mutableStateOf(mapOf<String,String>())
-    private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     public fun getRoomList() {
         clientScope.launch {
@@ -27,7 +25,7 @@ class RoomListViewModel(private val client : KotlinChatClient) : ViewModel() {
                 client.listRooms()
                 delay(200.milliseconds)
                 roomList = client.serverRooms
-                println("Got rooms from server: ${roomList}")
+                println("Got rooms from server: $roomList")
             }catch (e : Exception){
                 println("Failed to list rooms: ${e.message}")
             }
@@ -35,7 +33,16 @@ class RoomListViewModel(private val client : KotlinChatClient) : ViewModel() {
     }
 
     public fun joinRoom(roomId : String){
-        // TODO
+        clientScope.launch {
+            try{
+                client.joinRoom(roomId)
+
+            }catch (e : Exception){
+                errorSnackBarText = e.message!!
+                showErrorSnackbar = true
+            }
+        }
+
     }
 
     public fun disconnect(){

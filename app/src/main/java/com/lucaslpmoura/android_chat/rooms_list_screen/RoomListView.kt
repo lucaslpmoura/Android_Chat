@@ -16,11 +16,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.Navigation
+import com.lucaslpmoura.android_chat.common.showErrorSnackbar
+import com.lucaslpmoura.android_chat.login_screen.LoginViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,7 +39,11 @@ public fun RoomListScreen(
     viewModel: RoomListViewModel = koinViewModel(),
     navigateToLogin : () -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     viewModel.getRoomList()
+
 
     Scaffold(
         bottomBar = {
@@ -48,6 +63,14 @@ public fun RoomListScreen(
                     }
                 )
             }
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = Color.Red
+                )
+            }
         }
     ) { padding ->
         Column(
@@ -55,6 +78,11 @@ public fun RoomListScreen(
         ) {
             Text("Connected as ${viewModel.name}")
             RoomList(viewModel)
+        }
+
+        when (viewModel.showErrorSnackbar) {
+            true -> showErrorSnackbar(snackbarHostState, scope, viewModel)
+            false -> {}
         }
 
     }
@@ -89,3 +117,4 @@ public fun RoomListItem(viewModel : RoomListViewModel, room : Map<String,String>
         }
     }
 }
+

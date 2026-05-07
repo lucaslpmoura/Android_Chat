@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.lucaslpmoura.android_chat.common.showErrorSnackbar
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -127,7 +128,7 @@ public fun LoginScreen(
 
         ServerAddressDialog(viewModel)
         when (viewModel.showErrorSnackbar) {
-            true -> showErrorSnackBar(snackbarHostState, scope, viewModel)
+            true -> showErrorSnackbar(snackbarHostState, scope, viewModel)
             false -> {}
         }
 
@@ -257,21 +258,3 @@ private fun ServerAddressDialog(viewModel: LoginViewModel) {
 }
 
 
-private fun showErrorSnackBar(
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope,
-    viewModel: LoginViewModel
-) {
-    scope.launch {
-        val result = snackbarHostState.showSnackbar(
-            message = viewModel.errorSnackBarText
-
-        )
-
-        when (result) {
-            SnackbarResult.ActionPerformed, SnackbarResult.Dismissed
-                -> viewModel.showErrorSnackbar = false
-        }
-    }
-
-}
