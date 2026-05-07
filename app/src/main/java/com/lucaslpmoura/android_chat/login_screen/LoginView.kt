@@ -114,12 +114,12 @@ public fun LoginScreen(
             Row(
             ) {
                 Button(
-                    onClick = { shareOnWhatsapp(context) }
+                    onClick = { viewModel.shareOnWhatsapp(context) }
                 ) {
                     Text("Compartilhe no Whatsapp")
                 }
                 Button(
-                    onClick = { sendBugFixEmail(context) }
+                    onClick = { viewModel.sendBugFixEmail(context) }
                 ) {
                     Text("Enviar relatório de bug")
                 }
@@ -135,35 +135,6 @@ public fun LoginScreen(
     }
 
 
-}
-
-private fun shareOnWhatsapp(context: Context) {
-    Intent(Intent.ACTION_SEND).also {
-        it.setType("text/plain")
-        it.setPackage("com.whatsapp")
-        it.putExtra(Intent.EXTRA_TEXT, "Venha usar o android chat!")
-        try {
-            context.startActivity(Intent.createChooser(it, "Compratilhar com:"))
-        } catch (e: ActivityNotFoundException) {
-            e.printStackTrace()
-        }
-
-    }
-}
-
-private fun sendBugFixEmail(context: Context) {
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("mailto:") // Only email apps handle this.
-        putExtra(Intent.EXTRA_EMAIL, arrayOf("lucas.moura@setis.com.br"))
-        putExtra(Intent.EXTRA_SUBJECT, "[ANDROID_CHAT][BUG]")
-        putExtra(Intent.EXTRA_TEXT, "Descreva seu bug aqui.")
-    }
-    try {
-        context.startActivity(Intent.createChooser(intent, "Enviar relatório de bug"))
-    } catch (e: ActivityNotFoundException) {
-        println("Could not resolve the activity.")
-        e.printStackTrace()
-    }
 }
 
 
