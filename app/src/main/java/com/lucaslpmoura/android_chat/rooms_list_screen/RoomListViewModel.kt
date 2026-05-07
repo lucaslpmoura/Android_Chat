@@ -37,6 +37,15 @@ class RoomListViewModel(private val client : KotlinChatClient) : AndroidChatView
             try{
                 client.joinRoom(roomId)
 
+
+                if(client.lastError != null){
+                    throw Exception("Server returned error.")
+                }
+                if(client.currentRoomId != roomId){
+                    throw Exception("Server did not let you join room $roomId.")
+                }
+
+
             }catch (e : Exception){
                 errorSnackBarText = e.message!!
                 showErrorSnackbar = true

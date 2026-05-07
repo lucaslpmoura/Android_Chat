@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import com.lucaslpmoura.android_chat.login_screen.LoginScreen
+import com.lucaslpmoura.android_chat.room_screen.RoomScreen
 import com.lucaslpmoura.android_chat.rooms_list_screen.RoomListScreen
 import kotlinx.serialization.Serializable
 
@@ -19,6 +20,8 @@ class MainActivity : ComponentActivity() {
     @Serializable
     object RoomList
 
+    @Serializable
+    object Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +32,10 @@ class MainActivity : ComponentActivity() {
                     navigateToRoomsList = { navController.navigate(route = RoomList)}
                 )}
                 composable<RoomList> { RoomListScreen(
-                    navigateToLogin = {navController.navigate(route = Login)}
+                    navigateToLogin = {navController.navigate(route = Login)},
+                    navigateToRoom = {navController.navigate(route = Room)}
                 )}
+                composable<Room> { RoomScreen()}
             }
         }
 

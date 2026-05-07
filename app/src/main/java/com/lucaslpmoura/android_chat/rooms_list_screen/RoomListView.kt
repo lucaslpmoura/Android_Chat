@@ -31,13 +31,16 @@ import androidx.navigation.Navigation
 import com.lucaslpmoura.android_chat.common.showErrorSnackbar
 import com.lucaslpmoura.android_chat.login_screen.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 public fun RoomListScreen(
     viewModel: RoomListViewModel = koinViewModel(),
-    navigateToLogin : () -> Unit
+    navigateToLogin : () -> Unit,
+    navigateToRoom : () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -77,7 +80,7 @@ public fun RoomListScreen(
             modifier = Modifier.padding(padding)
         ) {
             Text("Connected as ${viewModel.name}")
-            RoomList(viewModel)
+            RoomList(viewModel, navigateToRoom)
         }
 
         when (viewModel.showErrorSnackbar) {
@@ -89,14 +92,17 @@ public fun RoomListScreen(
 }
 
 @Composable
-public fun RoomList(viewModel: RoomListViewModel){
+public fun RoomList(
+    viewModel: RoomListViewModel,
+    navigateToRoom: () -> Unit
+){
     LazyColumn() {
         items(viewModel.roomList.size) { item ->
             val room = mapOf<String,String>(
                 "id" to viewModel.roomList.keys.elementAt(item),
                 "name" to  viewModel.roomList.values.elementAt(item)
             )
-            RoomListItem(viewModel, room)
+            RoomListItem(viewModel, room, navigateToRoom)
 
 
         }
@@ -104,14 +110,21 @@ public fun RoomList(viewModel: RoomListViewModel){
 }
 
 @Composable
-public fun RoomListItem(viewModel : RoomListViewModel, room : Map<String,String>){
+public fun RoomListItem(
+    viewModel : RoomListViewModel,
+    room : Map<String,String>,
+    navigateToRoom: () -> Unit
+){
     val roomId : String = room["id"]!!
     val roomName : String = room["name"]!!
     Row(
     ){
         Text(roomName)
         Button(
-            onClick = {viewModel.joinRoom(roomId)}
+            onClick = {
+                viewModel.joinRoom(roomId)
+                navigateToRoom()
+            }
         ) {
             Text("Entrar...")
         }
