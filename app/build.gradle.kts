@@ -60,7 +60,8 @@ dependencies {
 
     implementation(platform("androidx.compose:compose-bom:2026.04.01"))
     implementation ("androidx.compose.material:material-icons-extended")
-    implementation("com.github.lucaslpmoura:Kotlin_Chat:0.1.4.2")
+
+    implementation("com.github.lucaslpmoura:Kotlin_Chat:0.1.4.3")
 
     val nav_version = "2.9.8"
     implementation("androidx.navigation:navigation-compose:${nav_version}")
