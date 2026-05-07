@@ -112,6 +112,8 @@ public fun LoginScreen(
 
             LoginComposable(viewModel, navigateToRoomsList)
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Button(
                     onClick = { viewModel.shareOnWhatsapp(context) }
