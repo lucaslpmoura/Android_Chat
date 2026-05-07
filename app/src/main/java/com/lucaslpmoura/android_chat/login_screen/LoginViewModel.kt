@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
 
-    var serverAddress by mutableStateOf(client.serverAddress)
+    var serverAddress by mutableStateOf("10.0.2.2")
     var name by mutableStateOf("")
 
     var connectionState by mutableStateOf(ConnectionState.NOT_CONNECTED)
@@ -34,9 +34,7 @@ class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
 
     private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    val userNameTextState = TextFieldState(
-
-    )
+    val userNameTextState = TextFieldState()
     val serverAddressTextFieldState = TextFieldState(
         initialText = serverAddress
     )
@@ -70,6 +68,7 @@ class LoginViewModel(private val client : KotlinChatClient) : ViewModel() {
                 if(client.name != name){
                     throw Exception("Server rejected connection.")
                 }
+
 
                 connectionState = ConnectionState.CONNECTED
 

@@ -24,7 +24,10 @@ import androidx.navigation.Navigation
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-public fun RoomListScreen(viewModel: RoomListViewModel = koinViewModel()) {
+public fun RoomListScreen(
+    viewModel: RoomListViewModel = koinViewModel(),
+    navigateToLogin : () -> Unit
+) {
     viewModel.getRoomList()
 
     Scaffold(
@@ -35,6 +38,7 @@ public fun RoomListScreen(viewModel: RoomListViewModel = koinViewModel()) {
                     selected = false,
                     onClick = {
                         viewModel.disconnect()
+                        navigateToLogin()
                     },
                     icon = {
                         Icon(

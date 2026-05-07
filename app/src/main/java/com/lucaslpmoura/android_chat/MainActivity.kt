@@ -25,10 +25,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             NavHost(navController, startDestination = Login) {
-                composable<Login> {LoginScreen(
+                composable<Login> { LoginScreen(
                     navigateToRoomsList = { navController.navigate(route = RoomList)}
                 )}
-                composable<RoomList> { RoomListScreen() }
+                composable<RoomList> { RoomListScreen(
+                    navigateToLogin = {navController.navigate(route = Login)}
+                )}
             }
         }
 

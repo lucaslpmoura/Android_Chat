@@ -21,13 +21,15 @@ class RoomListViewModel(private val client : KotlinChatClient) : ViewModel() {
 
     public fun getRoomList() {
         clientScope.launch {
+            println("Getting room list...")
+            println("Connected with id ${client.id}")
             try{
                 client.listRooms()
                 delay(200.milliseconds)
                 roomList = client.serverRooms
                 println("Got rooms from server: ${roomList}")
             }catch (e : Exception){
-                println("Failed to list rooms.")
+                println("Failed to list rooms: ${e.message}")
             }
         }
     }
