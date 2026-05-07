@@ -80,7 +80,7 @@ public fun RoomListScreen(
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            Text("Connected as ${viewModel.name}")
+            Text("Conectado como ${viewModel.name}")
             RoomList(viewModel, navigateToRoom)
         }
 

@@ -11,7 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 
 abstract class AndroidChatViewModel(private val client : KotlinChatClient) : ViewModel(){
 
-    var name by mutableStateOf("")
+
 
     var showErrorSnackbar by mutableStateOf(false)
     var errorSnackBarText by mutableStateOf("")

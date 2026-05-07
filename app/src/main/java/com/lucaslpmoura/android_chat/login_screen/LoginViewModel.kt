@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
 
 
 class LoginViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
-
+    var name by mutableStateOf("")
     var serverAddress by mutableStateOf("10.0.2.2")
     var connectionState by mutableStateOf(ConnectionState.NOT_CONNECTED)
 

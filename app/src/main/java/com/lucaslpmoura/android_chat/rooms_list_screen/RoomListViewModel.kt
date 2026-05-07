@@ -15,6 +15,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class RoomListViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
 
+    var name = client.name
     var roomList by mutableStateOf(mapOf<String,String>())
     var errorJoiningRoom by mutableStateOf(true)
 
