@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class RoomViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
-    var roomName by mutableStateOf(client.currentRoomId)
+    var roomName by mutableStateOf(client.currentRoomName)
     var roomId by mutableStateOf(client.currentRoomId)
     var errorLeavingRoom by mutableStateOf(true)
 
