@@ -2,6 +2,7 @@ package com.lucaslpmoura.android_chat.room_screen
 
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -86,6 +87,8 @@ class RoomViewModel(private val client : KotlinChatClient) : AndroidChatViewMode
                 if(client.currentRoomId == null){
                     throw Exception("Failed to send message to room")
                 }
+
+
 
             }catch (e : Exception){
                 println("Error send message: ${e.message}")

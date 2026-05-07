@@ -27,10 +27,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -193,12 +196,18 @@ fun LoginComposable(
 @Composable
 private fun ServerAddressDialog(viewModel: LoginViewModel) {
     if (viewModel.serverDialogValue) {
+        val focusRequester = remember { FocusRequester() }
         Dialog(
-            onDismissRequest = { viewModel.serverDialogValue = false },
+            onDismissRequest = {
+                viewModel.serverDialogValue = false},
             properties = DialogProperties(
                 dismissOnBackPress = true
             )
         ) {
+
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -214,6 +223,7 @@ private fun ServerAddressDialog(viewModel: LoginViewModel) {
                     TextField(
                         state = viewModel.serverAddressTextFieldState,
                         label = { Text("Endereço") },
+                        modifier = Modifier.focusRequester(focusRequester)
                     )
                     Button(
                         onClick = {
