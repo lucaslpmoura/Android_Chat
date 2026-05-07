@@ -47,7 +47,6 @@ public fun RoomListScreen(
 
     viewModel.getRoomList()
 
-
     Scaffold(
         bottomBar = {
             NavigationBar(
@@ -57,6 +56,8 @@ public fun RoomListScreen(
                     onClick = {
                         viewModel.disconnect()
                         navigateToLogin()
+
+
                     },
                     icon = {
                         Icon(
@@ -83,9 +84,13 @@ public fun RoomListScreen(
             RoomList(viewModel, navigateToRoom)
         }
 
-        when (viewModel.showErrorSnackbar) {
-            true -> showErrorSnackbar(snackbarHostState, scope, viewModel)
-            false -> {}
+
+        when(viewModel.errorJoiningRoom){
+            true -> {
+                if(viewModel.showErrorSnackbar)
+                    showErrorSnackbar(snackbarHostState, scope, viewModel)
+            }
+            false -> navigateToRoom()
         }
 
     }
@@ -123,11 +128,16 @@ public fun RoomListItem(
         Button(
             onClick = {
                 viewModel.joinRoom(roomId)
-                navigateToRoom()
+
+
             }
         ) {
             Text("Entrar...")
         }
+
+
     }
+
+
 }
 

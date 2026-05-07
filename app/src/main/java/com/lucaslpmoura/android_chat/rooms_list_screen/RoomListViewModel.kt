@@ -16,6 +16,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class RoomListViewModel(private val client : KotlinChatClient) : AndroidChatViewModel(client) {
 
     var roomList by mutableStateOf(mapOf<String,String>())
+    var errorJoiningRoom by mutableStateOf(true)
 
     public fun getRoomList() {
         clientScope.launch {
@@ -38,15 +39,24 @@ class RoomListViewModel(private val client : KotlinChatClient) : AndroidChatView
                 client.joinRoom(roomId)
 
 
+                var i = 0
+                while(client.currentRoomId == null && i < 10){
+                    delay(100.milliseconds)
+                    i++
+                }
+                println(client.currentRoomId)
                 if(client.lastError != null){
                     throw Exception("Server returned error.")
                 }
+
                 if(client.currentRoomId != roomId){
                     throw Exception("Server did not let you join room $roomId.")
                 }
 
+                errorJoiningRoom = false
 
             }catch (e : Exception){
+                errorJoiningRoom = true
                 errorSnackBarText = e.message!!
                 showErrorSnackbar = true
             }

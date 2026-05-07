@@ -35,7 +35,9 @@ class MainActivity : ComponentActivity() {
                     navigateToLogin = {navController.navigate(route = Login)},
                     navigateToRoom = {navController.navigate(route = Room)}
                 )}
-                composable<Room> { RoomScreen()}
+                composable<Room> { RoomScreen(
+                    navigateToRoomList = {navController.navigate(route = RoomList)}
+                )}
             }
         }
 
