@@ -204,8 +204,8 @@ fun TextFieldAndButton(viewModel: RoomViewModel, padding : PaddingValues){
         IconButton(
             onClick = {
                 viewModel.text()
-                viewModel.messageTextFieldState.clearText()
             },
+            enabled = viewModel.messageTextFieldState.text.isNotEmpty(),
             modifier = Modifier.weight(1f)
         ) {
             Icon(

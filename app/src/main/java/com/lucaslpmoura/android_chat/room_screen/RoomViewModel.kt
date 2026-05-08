@@ -71,9 +71,11 @@ class RoomViewModel(private val client : KotlinChatClient) : AndroidChatViewMode
     }
 
     public fun text(){
+        val textToSend = messageTextFieldState.text.toString()
+        clearText()
         clientScope.launch {
             try{
-                client.text(messageTextFieldState.text.toString())
+                client.text(textToSend)
 
                 var i = 0
                 while(client.currentRoomId != null && i < 10){
@@ -89,11 +91,16 @@ class RoomViewModel(private val client : KotlinChatClient) : AndroidChatViewMode
                 }
 
 
-
             }catch (e : Exception){
                 println("Error send message: ${e.message}")
 
             }
         }
+
+
+    }
+
+    private fun clearText(){
+        messageTextFieldState.clearText()
     }
 }
