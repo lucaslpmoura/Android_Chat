@@ -17,13 +17,10 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext.startKoin
 
-class MainApplication : Application(), KoinComponent, DefaultLifecycleObserver{
-
-    lateinit var chatClient: KotlinChatClient
-    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+class MainApplication : Application(), KoinComponent{
 
     override fun onCreate() {
-        super<Application>.onCreate()
+        super.onCreate()
 
         startKoin{
             androidLogger()
@@ -31,21 +28,6 @@ class MainApplication : Application(), KoinComponent, DefaultLifecycleObserver{
             modules(appModule)
         }
 
-        chatClient = getKoin().get()
-    }
-
-    override fun onStop(owner: LifecycleOwner) {
-        super.onStop(owner)
-
-
-        applicationScope.launch {
-            try{
-                println("Sending DISCONNECT to server....")
-                chatClient.disconnect()
-            } catch (e : Exception){
-                println(e.message)
-            }
-        }
 
     }
 }
